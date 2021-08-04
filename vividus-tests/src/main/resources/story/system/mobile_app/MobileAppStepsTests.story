@@ -7,7 +7,6 @@ Lifecycle:
 Examples:
 /data/tables/system/mobile_app/locators/${target-platform}.table
 
-
 Scenario: Verify step: 'Given I start mobile application with capabilities:$capabilities'
 Given I start mobile application with capabilities:
 |name|value     |
@@ -170,9 +169,8 @@ When I tap on element located `accessibilityId(<togglerAccessibilityId>)`
 When I tap on element located `iosClassChain(**/XCUIElementTypeButton[$name == "Image"$])`
 When I upload file `/data/mobile-upload-image.png` to device
 When I tap on element located `accessibilityId(select-image-testID)`
-When I wait until element located `accessibilityId(Recents)` appears
-When I tap on element located `accessibilityId(Recents)`
-When I tap on element located `xpath((//XCUIElementTypeCell[contains(@name, "Photo")])[last()])`
+When I wait until element located `accessibilityId(Photos)` appears
+When I tap on element located `xpath(//XCUIElementTypeImage[contains(@name, "#{generateDate(P, MMMM dd)}")])`
 Then number of elements found by `xpath(//XCUIElementTypeStaticText[@value='228x228'])` is equal to `1`
 
 
