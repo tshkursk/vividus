@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpStatus;
@@ -35,6 +36,7 @@ import org.vividus.mobitru.client.exception.MobitruOperationException;
 
 public class MobitruClient
 {
+    private static final String FORWARD_SLASH = "/";
     private static final String DEVICE_PATH = "/device";
 
     private final IHttpClient httpClient;
@@ -43,10 +45,11 @@ public class MobitruClient
 
     private String apiUrl;
 
-    public MobitruClient(IHttpClient httpClient, String billingUnit)
+    public MobitruClient(IHttpClient httpClient, String billingUnit, String workspaceId)
     {
         this.httpClient = httpClient;
-        this.apiBasePath = String.format("/billing/unit/%s/automation/api", billingUnit);
+        String workspacePath = !workspaceId.isEmpty() ? "workspace/" + workspaceId + FORWARD_SLASH : StringUtils.EMPTY;
+        this.apiBasePath = String.format("/billing/unit/%s/%sautomation/api", billingUnit, workspacePath);
     }
 
     public byte[] findDevices(String platform, Map<String, String> parameters) throws MobitruOperationException
@@ -72,7 +75,8 @@ public class MobitruClient
 
     public void returnDevice(String deviceId) throws MobitruOperationException
     {
-        executeRequest(DEVICE_PATH + "/" + deviceId, HttpMethod.DELETE, UnaryOperator.identity(), HttpStatus.SC_OK);
+        executeRequest(DEVICE_PATH + FORWARD_SLASH + deviceId, HttpMethod.DELETE, UnaryOperator.identity(),
+                HttpStatus.SC_OK);
     }
 
     public void startDeviceScreenRecording(String deviceId) throws MobitruOperationException
