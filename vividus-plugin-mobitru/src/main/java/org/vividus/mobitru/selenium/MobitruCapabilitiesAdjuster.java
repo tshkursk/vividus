@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 the original author or authors.
+ * Copyright 2019-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,22 @@ public class MobitruCapabilitiesAdjuster extends DesiredCapabilitiesAdjuster
     private final InstallApplicationOptions installApplicationOptions;
     private final MobitruFacade mobitruFacade;
     private final MobitruSessionInfoStorage mobitruSessionInfoStorage;
+    private final MobitruPropertiesValidator mobitruPropertiesValidator;
     private String appFileName;
 
     public MobitruCapabilitiesAdjuster(InstallApplicationOptions installApplicationOptions, MobitruFacade mobitruFacade,
-            MobitruSessionInfoStorage mobitruSessionInfoStorage)
+            MobitruSessionInfoStorage mobitruSessionInfoStorage, MobitruPropertiesValidator mobitruPropertiesValidator)
     {
         this.installApplicationOptions = installApplicationOptions;
         this.mobitruFacade = mobitruFacade;
         this.mobitruSessionInfoStorage = mobitruSessionInfoStorage;
+        this.mobitruPropertiesValidator = mobitruPropertiesValidator;
     }
 
     @Override
     public Map<String, Object> getExtraCapabilities(DesiredCapabilities desiredCapabilities)
     {
+        mobitruPropertiesValidator.validate();
         String deviceId = null;
         try
         {
