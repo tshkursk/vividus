@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package org.vividus.ui.web.playwright.steps.devtools;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.microsoft.playwright.Page;
+package org.vividus.steps.ui.web;
 
 import org.jbehave.core.annotations.When;
-import org.vividus.ui.web.playwright.BrowserContextProvider;
-import org.vividus.ui.web.playwright.UiContext;
+import org.vividus.ui.web.cdp.CdpClient;
 
 public class MobileEmulationSteps
 {
-    private static final Gson GSON = new Gson();
+    private final CdpClient cdpClient;
 
-    private final BrowserContextProvider browserContextProvider;
-    private final UiContext uiContext;
-
-    public MobileEmulationSteps(BrowserContextProvider browserContextProvider, UiContext uiContext)
+    public MobileEmulationSteps(CdpClient cdpClient)
     {
-        this.browserContextProvider = browserContextProvider;
-        this.uiContext = uiContext;
+        this.cdpClient = cdpClient;
     }
 
     /**
@@ -47,9 +38,7 @@ public class MobileEmulationSteps
     @When("I emulate mobile device with configuration:`$jsonConfiguration`")
     public void overrideDeviceMetrics(String jsonConfiguration)
     {
-        JsonObject args = GSON.fromJson(jsonConfiguration, JsonObject.class);
-        Page page = uiContext.getCurrentPage();
-        browserContextProvider.getCdpSession(page).send("Emulation.setDeviceMetricsOverride", args);
+        cdpClient.executeCdpCommand("Emulation.setDeviceMetricsOverride", jsonConfiguration);
     }
 
     /**
@@ -61,7 +50,6 @@ public class MobileEmulationSteps
     @When("I reset mobile device emulation")
     public void clearDeviceMetrics()
     {
-        Page page = uiContext.getCurrentPage();
-        browserContextProvider.getCdpSession(page).send("Emulation.clearDeviceMetricsOverride");
+        cdpClient.executeCdpCommand("Emulation.clearDeviceMetricsOverride");
     }
 }
